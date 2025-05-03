@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login and Signup - Starlit Canvas</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React and ReactDOM CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+  <!-- Babel for JSX -->
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7/babel.min.js"></script>
+  <!-- Google Fonts for Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #1e3a8a, #6b21a8, #db2777, #f97316, #14b8a6);
+      background-size: 300% 300%;
+      animation: gradientFlow 10s ease infinite;
+      font-family: 'Inter', sans-serif;
+      color: #f3f4f6;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: auto;
+    }
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    /* Starfield and Orbs */
+    .starfield {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .star, .orb {
+      position: absolute;
+      border-radius: 50%;
+      animation: twinkle 4s ease-in-out infinite;
+    }
+    .star {
+      background: #ffffff;
+      opacity: 0.8;
+    }
+    .orb {
+      background: linear-gradient(45deg, #facc15, #db2777);
+      opacity: 0.6;
+      animation: floatOrb 12s ease-in-out infinite;
+    }
+    .star:nth-child(1) { width: 2px; height: 2px; left: 15%; top: 10%; animation-delay: 0s; }
+    .star:nth-child(2) { width: 3px; height: 3px; left: 25%; top: 60%; animation-delay: 0.5s; background: #facc15; }
+    .star:nth-child(3) { width: 1px; height: 1px; left: 45%; top: 80%; animation-delay: 1s; }
+    .star:nth-child(4) { width: 4px; height: 4px; left: 65%; top: 20%; animation-delay: 1.5s; background: #db2777; }
+    .star:nth-child(5) { width: 2px; height: 2px; left: 85%; top: 50%; animation-delay: 2s; }
+    .orb:nth-child(6) { width: 10px; height: 10px; left: 20%; top: 30%; animation-delay: 0s; }
+    .orb:nth-child(7) { width: 8px; height: 8px; left: 40%; top: 70%; animation-delay: 3s; }
+    .orb:nth-child(8) { width: 12px; height: 12px; left: 60%; top: 40%; animation-delay: 6s; }
+    @keyframes twinkle {
+      0% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.3); }
+      100% { opacity: 0.8; transform: scale(1); }
+    }
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0); opacity: 0.6; }
+      50% { transform: translate(50px, -100px); opacity: 0.9; }
+      100% { transform: translate(0, 0); opacity: 0.6; }
+    }
+    /* Aurora Effect */
+    .aurora {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(219, 39, 119, 0.2), rgba(20, 184, 166, 0.2), rgba(168, 85, 247, 0.2));
+      opacity: 0.4;
+      animation: auroraWave 8s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes auroraWave {
+      0% { transform: translateY(0); opacity: 0.4; }
+      50% { transform: translateY(-20px); opacity: 0.6; }
+      100% { transform: translateY(0); opacity: 0.4; }
+    }
+    /* Form Container */
+    .form-container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      animation: fadeIn 1.2s ease-out;
+      z-index: 2;
+      max-width: 100%;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    /* Title Animation */
+    .title {
+      color: #fefcbf;
+      font-weight: 700;
+      text-shadow: 0 0 15px rgba(250, 204, 21, 0.7), 0 0 25px rgba(219, 39, 119, 0.5);
+      animation: bounceIn 1s ease-out, glowCycle 6s ease-in-out infinite;
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      60% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+    @keyframes glowCycle {
+      0% { text-shadow: 0 0 15px rgba(250, 204, 21, 0.7), 0 0 25px rgba(219, 39, 119, 0.5); }
+      33% { text-shadow: 0 0 15px rgba(219, 39, 119, 0.7), 0 0 25px rgba(20, 184, 166, 0.5); }
+      66% { text-shadow: 0 0 15px rgba(20, 184, 166, 0.7), 0 0 25px rgba(250, 204, 21, 0.5); }
+      100% { text-shadow: 0 0 15px rgba(250, 204, 21, 0.7), 0 0 25px rgba(219, 39, 119, 0.5); }
+    }
+    /* Button Animation */
+    .btn-animate {
+      background: linear-gradient(45deg, #facc15, #db2777, #14b8a6);
+      background-size: 200%;
+      color: #1e3a8a;
+      font-weight: 600;
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      transition: background-position 0.5s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-animate:hover {
+      background-position: 100%;
+      transform: translateY(-3px);
+      box-shadow: 0 0 25px rgba(250, 204, 21, 0.8);
+    }
+    .btn-animate:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .btn-animate::after, .btn-animate::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.5s ease;
+    }
+    .btn-animate::after {
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.4);
+    }
+    .btn-animate::before {
+      width: 0;
+      height: 0;
+      background: rgba(219, 39, 119, 0.3);
+    }
+    .btn-animate:active::after {
+      width: 400px;
+      height: 400px;
+    }
+    .btn-animate:active::before {
+      width: 300px;
+      height: 300px;
+      transition-delay: 0.1s;
+    }
+    /* Input Animation */
+    .input-group {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .input-animate {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #f3f4f6;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+    .input-animate:focus {
+      border-color: #facc15;
+      box-shadow: 0 0 15px rgba(250, 204, 21, 0.7);
+      animation: inputGlow 2s ease-in-out infinite;
+      outline: none;
+    }
+    @keyframes inputGlow {
+      0% { box-shadow: 0 0 15px rgba(250, 204, 21, 0.7); }
+      33% { box-shadow: 0 0 15px rgba(219, 39, 119, 0.7); }
+      66% { box-shadow: 0 0 15px rgba(20, 184, 166, 0.7); }
+      100% { box-shadow: 0 0 15px rgba(250, 204, 21, 0.7); }
+    }
+    .input-label {
+      position: absolute;
+      top: 50%;
+      left: 1rem;
+      transform: translateY(-50%);
+      color: #d1d5db;
+      font-size: 0.875rem;
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+    .input-animate:focus + .input-label,
+    .input-animate:not(:placeholder-shown) + .input-label {
+      top: -0.75rem;
+      left: 0.75rem;
+      font-size: 0.75rem;
+      color: #facc15;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0 0.25rem;
+    }
+    /* Success Message */
+    .success-message {
+      background: rgba(20, 184, 166, 0.2);
+      border: 1px solid #14b8a6;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      color: #d1fae5;
+      animation: fadeIn 0.5s ease-out;
+    }
+    /* Cursor Trail */
+    .cursor-trail {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: linear-gradient(45deg, #facc15, #db2777);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: fadeTrail 0.7s ease-out forwards;
+      z-index: 10;
+    }
+    @keyframes fadeTrail {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.2); }
+    }
+  </style>
+</head>
+<body>
+  <div class="starfield">
+    <div class="star"></div>
+    <div class="star"></div>
+    <div class="star"></div>
+    <div class="star"></div>
+    <div class="star"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="aurora"></div>
+  </div>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    // Login Component
+    const LoginForm = ({ onSwitchToSignup }) => {
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
+      const [error, setError] = useState('');
+      const [success, setSuccess] = useState('');
+      const [isLoading, setIsLoading] = useState(false);
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (isLoading) return;
+        setIsLoading(true);
+        setError('');
+        setSuccess('');
+        try {
+          const response = await fetch('http://localhost:3000/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+          });
+          const data = await response.json();
+          if (response.ok) {
+            console.log('Login successful:', data.user);
+            setSuccess('Login successful! Redirecting...');
+            setTimeout(() => {
+              window.location.href = 'home.html';
+            }, 1000);
+          } else {
+            setError(data.message || 'Invalid email or password');
+          }
+        } catch (err) {
+          setError('An error occurred. Please try again.');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      return (
+        <div className="form-container max-w-md w-full p-8">
+          <h2 className="title text-3xl font-bold text-center mb-6">Welcome Back</h2>
+          {error && <p className="text-red-400 text-center mb-4">{error}</p>}
+          {success && <p className="success-message mb-4">{success}</p>}
+          <div className="space-y-6">
+            <div className="input-group">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input-animate"
+                placeholder="Email"
+                required
+              />
+              <label className="input-label">Email</label>
+            </div>
+            <div className="input-group">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input-animate"
+                placeholder="Password"
+                required
+              />
+              <label className="input-label">Password</label>
+            </div>
+            <button
+              onClick={handleSubmit}
+              className="btn-animate w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Signing In...' : 'Sign In'}
+            </button>
+          </div>
+          <p className="mt-6 text-center text-sm text-gray-300">
+            Need an account?{' '}
+            <span
+              onClick={onSwitchToSignup}
+              className="text-yellow-400 hover:text-pink-400 cursor-pointer"
+            >
+              Sign up
+            </span>
+          </p>
+        </div>
+      );
+    };
+
+    // Signup Component
+    const SignupForm = ({ onSwitchToLogin }) => {
+      const [username, setUsername] = useState('');
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
+      const [age, setAge] = useState('');
+      const [country, setCountry] = useState('');
+      const [phone, setPhone] = useState('');
+      const [favoriteColor, setFavoriteColor] = useState('');
+      const [error, setError] = useState('');
+      const [isLoading, setIsLoading] = useState(false);
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (isLoading) return;
+        setIsLoading(true);
+        setError('');
+        const user = {
+          username,
+          email,
+          password,
+          age,
+          country,
+          phone,
+          favoriteColor,
+          createdAt: new Date().toISOString(),
+        };
+        try {
+          const response = await fetch('http://localhost:3000/api/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user),
+          });
+          const data = await response.json();
+          if (response.ok) {
+            console.log('Signup successful:', data.user);
+            alert('Signup successful! Please log in.');
+            setError('');
+            onSwitchToLogin();
+          } else {
+            setError(data.message || 'An error occurred during signup.');
+          }
+        } catch (err) {
+          setError('An error occurred. Please try again.');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      return (
+        <div className="form-container max-w-3xl w-full p-10">
+          <h2 className="title text-3xl font-bold text-center mb-6">Join Starlit Canvas</h2>
+          {error && <p className="text-red-400 text-center mb-4">{error}</p>}
+          <div className="space-y-6">
+            <div className="input-group">
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="input-animate"
+                placeholder="Username"
+                required
+              />
+              <label className="input-label">Username</label>
+            </div>
+            <div className="input-group">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input-animate"
+                placeholder="Email"
+                required
+              />
+              <label className="input-label">Email</label>
+            </div>
+            <div className="input-group">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input-animate"
+                placeholder="Password"
+                required
+              />
+              <label className="input-label">Password</label>
+            </div>
+            <div className="input-group">
+              <input
+                type="number"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                className="input-animate"
+                placeholder="Age"
+                required
+              />
+              <label className="input-label">Age</label>
+            </div>
+            <div className="input-group">
+              <input
+                type="text"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className="input-animate"
+                placeholder="Country"
+                required
+              />
+              <label className="input-label">Country</label>
+            </div>
+            <div className="input-group">
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="input-animate"
+                placeholder="Phone Number"
+                required
+              />
+              <label className="input-label">Phone Number</label>
+            </div>
+            <div className="input-group">
+              <input
+                type="text"
+                value={favoriteColor}
+                onChange={(e) => setFavoriteColor(e.target.value)}
+                className="input-animate"
+                placeholder="Favorite Color"
+                required
+              />
+              <label className="input-label">Favorite Color</label>
+            </div>
+            <button
+              onClick={handleSubmit}
+              className="btn-animate w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Creating Account...' : 'Create Account'}
+            </button>
+          </div>
+          <p className="mt-6 text-center text-sm text-gray-300">
+            Already have an account?{' '}
+            <span
+              onClick={onSwitchToLogin}
+              className="text-yellow-400 hover:text-pink-400 cursor-pointer"
+            >
+              Sign in
+            </span>
+          </p>
+        </div>
+      );
+    };
+
+    // Main App Component
+    const App = () => {
+      const [isLogin, setIsLogin] = useState(true);
+
+      return (
+        <div className="min-h-screen flex items-center justify-center p-6">
+          {isLogin ? (
+            <LoginForm onSwitchToSignup={() => setIsLogin(false)} />
+          ) : (
+            <SignupForm onSwitchToLogin={() => setIsLogin(true)} />
+          )}
+        </div>
+      );
+    };
+
+    // Render the App
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+  <!-- Cursor Trail Script -->
+  <script>
+    document.addEventListener('mousemove', (e) => {
+      const trail = document.createElement('div');
+      trail.className = 'cursor-trail';
+      trail.style.left = `${e.clientX}px`;
+      trail.style.top = `${e.clientY}px`;
+      document.body.appendChild(trail);
+      setTimeout(() => trail.remove(), 700);
+    });
+  </script>
+</body>
+</html>

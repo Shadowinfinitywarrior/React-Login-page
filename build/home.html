@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Starlit Canvas</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts for Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #1e3a8a, #6b21a8, #db2777, #f97316, #14b8a6);
+      background-size: 300% 300%;
+      animation: gradientFlow 10s ease infinite;
+      font-family: 'Inter', sans-serif;
+      color: #f3f4f6;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: auto;
+    }
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    /* Starfield and Orbs */
+    .starfield {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .star, .orb {
+      position: absolute;
+      border-radius: 50%;
+      animation: twinkle 4s ease-in-out infinite;
+    }
+    .star {
+      background: #ffffff;
+      opacity: 0.8;
+    }
+    .orb {
+      background: linear-gradient(45deg, #facc15, #db2777);
+      opacity: 0.6;
+      animation: floatOrb 12s ease-in-out infinite;
+    }
+    .star:nth-child(1) { width: 2px; height: 2px; left: 15%; top: 10%; animation-delay: 0s; }
+    .star:nth-child(2) { width: 3px; height: 3px; left: 25%; top: 60%; animation-delay: 0.5s; background: #facc15; }
+    .star:nth-child(3) { width: 1px; height: 1px; left: 45%; top: 80%; animation-delay: 1s; }
+    .star:nth-child(4) { width: 4px; height: 4px; left: 65%; top: 20%; animation-delay: 1.5s; background: #db2777; }
+    .star:nth-child(5) { width: 2px; height: 2px; left: 85%; top: 50%; animation-delay: 2s; }
+    .orb:nth-child(6) { width: 10px; height: 10px; left: 20%; top: 30%; animation-delay: 0s; }
+    .orb:nth-child(7) { width: 8px; height: 8px; left: 40%; top: 70%; animation-delay: 3s; }
+    .orb:nth-child(8) { width: 12px; height: 12px; left: 60%; top: 40%; animation-delay: 6s; }
+    @keyframes twinkle {
+      0% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.3); }
+      100% { opacity: 0.8; transform: scale(1); }
+    }
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0); opacity: 0.6; }
+      50% { transform: translate(50px, -100px); opacity: 0.9; }
+      100% { transform: translate(0, 0); opacity: 0.6; }
+    }
+    /* Aurora Effect */
+    .aurora {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(219, 39, 119, 0.2), rgba(20, 184, 166, 0.2), rgba(168, 85, 247, 0.2));
+      opacity: 0.4;
+      animation: auroraWave 8s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes auroraWave {
+      0% { transform: translateY(0); opacity: 0.4; }
+      50% { transform: translateY(-20px); opacity: 0.6; }
+      100% { transform: translateY(0); opacity: 0.4; }
+    }
+    /* Message Container */
+    .message-container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      animation: fadeIn 1.2s ease-out;
+      z-index: 2;
+      text-align: center;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    /* Title Animation */
+    .title {
+      color: #fefcbf;
+      font-weight: 700;
+      text-shadow: 0 0 15px rgba(250, 204, 21, 0.7), 0 0 25px rgba(219, 39, 119, 0.5);
+      animation: bounceIn 1s ease-out, glowCycle 6s ease-in-out infinite;
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      60% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+    @keyframes glowCycle {
+      0% { text-shadow: 0 0 15px rgba(250, 204, 21, 0.7), 0 0 25px rgba(219, 39, 119, 0.5); }
+      33% { text-shadow: 0 0 15px rgba(219, 39, 119, 0.7), 0 0 25px rgba(20, 184, 166, 0.5); }
+      66% { text-shadow: 0 0 15px rgba(20, 184, 166, 0.7), 0 0 25px rgba(250, 204, 21, 0.5); }
+      100% { text-shadow: 0 0 15px rgba(250, 204, 21, 0.7), 0 0 25px rgba(219, 39, 119, 0.5); }
+    }
+    /* Button Animation */
+    .btn-animate {
+      background: linear-gradient(45deg, #facc15, #db2777, #14b8a6);
+      background-size: 200%;
+      color: #1e3a8a;
+      font-weight: 600;
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      transition: background-position 0.5s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-animate:hover {
+      background-position: 100%;
+      transform: translateY(-3px);
+      box-shadow: 0 0 25px rgba(250, 204, 21, 0.8);
+    }
+    .btn-animate::after, .btn-animate::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.5s ease;
+    }
+    .btn-animate::after {
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.4);
+    }
+    .btn-animate::before {
+      width: 0;
+      height: 0;
+      background: rgba(219, 39, 119, 0.3);
+    }
+    .btn-animate:active::after {
+      width: 400px;
+      height: 400px;
+    }
+    .btn-animate:active::before {
+      width: 300px;
+      height: 300px;
+      transition-delay: 0.1s;
+    }
+    /* Cursor Trail */
+    .cursor-trail {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: linear-gradient(45deg, #facc15, #db2777);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: fadeTrail 0.7s ease-out forwards;
+      z-index: 10;
+    }
+    @keyframes fadeTrail {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.2); }
+    }
+  </style>
+</head>
+<body>
+  <div class="starfield">
+    <div class="star"></div>
+    <div class="star"></div>
+    <div class="star"></div>
+    <div class="star"></div>
+    <div class="star"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="aurora"></div>
+  </div>
+  <div class="min-h-screen flex flex-col items-center justify-center p-6">
+    <div class="message-container mb-8">
+      <h1 class="title text-5xl font-bold mb-6">Welcome to Starlit Canvas!</h1>
+      <p class="text-xl text-gray-300">Create Your Universe</p>
+    </div>
+    <button
+      onclick="window.location.href='index.html'"
+      class="btn-animate"
+    >
+      Logout
+    </button>
+  </div>
+  <!-- Cursor Trail Script -->
+  <script>
+    document.addEventListener('mousemove', (e) => {
+      const trail = document.createElement('div');
+      trail.className = 'cursor-trail';
+      trail.style.left = `${e.clientX}px`;
+      trail.style.top = `${e.clientY}px`;
+      document.body.appendChild(trail);
+      setTimeout(() => trail.remove(), 700);
+    });
+  </script>
+</body>
+</html>
