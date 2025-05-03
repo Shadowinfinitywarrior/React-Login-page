@@ -73,6 +73,9 @@ react-login-page/
 ├── package.json          # Node.js dependencies and scripts
 └── README.md             # Project documentation
 ```
+![image](https://github.com/user-attachments/assets/99f3fe49-095a-4e69-8402-a1c1bffae746)
+![image](https://github.com/user-attachments/assets/eea46b2a-d481-4052-b740-9ca958d7bf82)
+
 
 ## Usage
 
