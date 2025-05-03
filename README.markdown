@@ -149,4 +149,4 @@ This project is licensed under the MIT License. See the [LICENSE](#) file for de
 
 ## Contact
 
-For questions or feedback, reach out to nithishkathiravan123@gmail.com(mailto:nithishkathiravan123@gmail.com) or open an issue on GitHub.
+For questions or feedback, reach out to nithishkathiravan123@gmail.com or open an issue on GitHub.
